@@ -1,0 +1,11 @@
+﻿  cMenu.cpp
+cMenu.obj : warning LNK4006: "char * clicksound" (?clicksound@@3PADA) already defined in CGameEventManager2.obj; second definition ignored
+cMenu.obj : warning LNK4006: "char * hitmarkerdata" (?hitmarkerdata@@3PADA) already defined in CGameEventManager2.obj; second definition ignored
+esp.obj : warning LNK4006: "class Vector __cdecl GetBonePos(int,int)" (?GetBonePos@@YA?AVVector@@HH@Z) already defined in backtrack1.obj; second definition ignored
+     Creating library .\binary\Recodev34.lib and object .\binary\Recodev34.exp
+.\binary\Recodev34.dll : warning LNK4088: image being generated due to /FORCE option; image may not run
+  Generating code
+  Finished generating code
+* CIL library *(* CIL module *) : warning LNK4006: _free already defined in MSVCRT.lib(MSVCR120.dll); second definition ignored
+.\binary\Recodev34.dll : warning LNK4088: image being generated due to /FORCE option; image may not run
+  Hack.vcxproj -> C:\Users\dima 1338\Desktop\читы кс 1.6\420hook css v34 src\.\binary\Recodev34.dll
