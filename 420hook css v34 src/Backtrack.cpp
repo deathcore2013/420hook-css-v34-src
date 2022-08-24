@@ -32,32 +32,8 @@ inline Vector angle_vector(QAngle meme)
 //=======================================================================
 
 
-Vector GetHitboxPosition55(C_BaseEntity* pEntity, int Hitbox)
-{
-	matrix3x4_t matrix[128];
 
-
-	if (!pEntity->SetupBones(matrix, 128, 0x00000100, pEntity->GetSimulationTime()))
-		return Vector(0, 0, 0);
-
-
-
-	studiohdr_t* hdr = Ikaros.m_pModelinfo->GetStudiomodel(pEntity->GetModel());
-	mstudiohitboxset_t* set = hdr->pHitboxSet(0);
-
-	mstudiobbox_t* hitbox = set->pHitbox(Hitbox);
-
-	if (!hitbox)
-		return Vector(0, 0, 0);
-
-	Vector vMin, vMax, vCenter, sCenter;
-	VectorTransform(hitbox->bbmin, matrix[hitbox->bone], vMin);
-	VectorTransform(hitbox->bbmax, matrix[hitbox->bone], vMax);
-	vCenter = (vMin + vMax) *0.5f;
-	return vCenter;
-}
-
-Vector GetHitboxPOS_Ent1(CBaseEntity* Player, int HitboxID)
+Vector GetHitboxPOS(CBaseEntity* Player, int HitboxID)
 {
 	matrix3x4_t matrix[128];
 	if (!Player->SetupBones(matrix, 128, 0x00000100, GetTickCount64())) return Vector(0, 0, 0);
@@ -78,38 +54,13 @@ Vector GetHitboxPOS_Ent1(CBaseEntity* Player, int HitboxID)
 
 
 
-Vector GetHitboxPOS_Ent(CBaseEntity* Player, int HitboxID)
-{
-	//matrix3x4 matrix[128];
-	matrix3x4_t matrix[128];
-	if (!Player->SetupBones(matrix, 128, 0x00000100, GetTickCount64())) return Vector(0, 0, 0);
-	const model_t* mod = Player->GetModel();
-	if (!mod) return Vector(0, 0, 0);
-	studiohdr_t* hdr = Ikaros.m_pModelinfo->GetStudiomodel(Player->GetModel());
-
-	if (!hdr) return Vector(0, 0, 0);
-
-	mstudiohitboxset_t* set = hdr->pHitboxSet(0);
-	if (!set) return Vector(0, 0, 0);
-	mstudiobbox_t* hitbox = set->pHitbox(HitboxID);
-	if (!hitbox) return Vector(0, 0, 0);
-	Vector vMin, vMax, vCenter, sCenter;
-	VectorTransform(hitbox->bbmin, matrix[hitbox->bone], vMin);
-	VectorTransform(hitbox->bbmax, matrix[hitbox->bone], vMax);
-	vCenter = (vMin + vMax) *0.5f;
-
-	vCenter.z += 4.2f;
-
-
-	return vCenter;
-}
 
 void CBacktracking::Run(CUserCmd* cmd)
 {
 	int iBestTarget = -1;
 	float bestFov = 99999;
 	float backtrack_tick = 0;
-	//CBaseEntity* pLocal = gInts.EntList->GetClientEntity(me);
+	
 	C_BaseEntity *pLocal = Ikaros.m_pEntList->GetClientEntity(Ikaros.m_pEngine->GetLocalPlayer())->GetBaseEntity();
 
 	if (!pLocal)
@@ -137,14 +88,13 @@ void CBacktracking::Run(CUserCmd* cmd)
 			|| Ikaros.m_pMyPlayer->BaseEnt()->GetTeamNumber() == 1)
 
 			continue;
-		//auto pEntity = (C_BasePlayer*)g_pEntityList->GetClientEntity(i);
-		//C_BaseEntity* pEntity = (C_BaseEntity*)Ikaros.m_pEntList->GetClientEntity(i);
 		
-		Vector hitboxpos = GetHitboxPOS_Ent1(pBaseEntity, Ikaros.m_pCvars->iAimSpot);
+		
+		Vector hitboxpos = GetHitboxPOS(pBaseEntity, Ikaros.m_pCvars->iAimSpot);
 		headPositions[index][cmd->command_number % 13] = BacktrackData{ cmd->tick_count, hitboxpos }; 
 
 		Vector ViewDir = angle_vector(cmd->viewangles);
-		//Vector ViewDir = Ikaros.m_pEntity->GetEyePos(Ikaros.m_pMyPlayer->BaseEnt());
+		
 		float FOVDistance = distance_point_to_line(hitboxpos, Ikaros.m_pEntity->GetEyePos(pBaseEntity), ViewDir);
 
 		if (bestFov > FOVDistance)
